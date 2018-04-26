@@ -36,7 +36,8 @@ namespace StopTrack
                     orders.ToList().ForEach((order) => Track(order));
 
                     //Task.Delay(TimeSpan.FromSeconds(60));
-                    System.Threading.Thread.Sleep(30 * 1000);
+                    //System.Threading.Thread.Sleep(30 * 1000);
+                    System.Threading.Thread.Sleep(15 * 1000);
                 }
                 catch (Exception ex)
                 {

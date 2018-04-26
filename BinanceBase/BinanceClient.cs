@@ -108,7 +108,8 @@ namespace BinanceBase
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                Console.WriteLine($"{side} Order Success! Symbol :{symbol}, Price :{price}, Qty :{quantity}, Amount :{ (double)price * quantity } order client id = {id}");
+                //Console.WriteLine($"{side} Order Success! Symbol :{symbol}, Price :{price}, Qty :{quantity}, Amount :{ (double)price * quantity } order client id = {id}"); dont need it
+                Console.WriteLine($"{side} Order Success! Symbol :{symbol}, PRICE :{price}, Qty :{quantity}, Amount :{ (double)price * quantity }");
                 return id;
             }
             else
@@ -162,7 +163,8 @@ namespace BinanceBase
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                Console.WriteLine($"Canceled! Symbol :{symbol}, order client id = {id}");
+                //Console.WriteLine($"Canceled! Symbol :{symbol}, order client id = {id}"); dont need it
+                Console.WriteLine($"Canceled! Symbol :{symbol}");
                 return true;
             }
             else
