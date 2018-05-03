@@ -252,6 +252,27 @@ namespace BinanceBase
             return JsonConvert.DeserializeObject<DTO._24hr>(response.Content);
         }
 
+        public List<DTO.Balance> GetBalance()
+        {
+            var queryString = $"timestamp={GetServerTime()}";
+            var queryStringHashed = GetEncrypted(queryString);
+
+            var client = new RestClient(API_URL);
+            var request = new RestRequest("/api/v3/account?" + queryString, RestSharp.Method.GET);
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("X-MBX-APIKEY", Common.Config.Key);
+            request.AddParameter("signature", queryStringHashed);
+
+            var response = client.Execute(request);
+            var balanceInfo= JsonConvert.DeserializeObject<BalanceInfo>(response.Content);
+            return balanceInfo.balances.ToList();
+        }
+
+        internal class BalanceInfo
+        {
+            public DTO.Balance[] balances { get; set; }
+        }
+
         #region Helpers
         private string GetEncrypted(string data)
         {

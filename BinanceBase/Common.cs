@@ -47,10 +47,10 @@ namespace BinanceBase
 
         public static decimal FixQty(decimal qty, decimal minQty)
         {
-            if ((Int32)qty < 1) //1 den küçük ise bu fiyatı büyük bir altcoin dir.
-                qty = Math.Round(qty, 8);
-            else
-                qty = Math.Floor(qty);
+            //if ((Int32)qty < 1) //1 den küçük ise bu fiyatı büyük bir altcoin dir.
+            //    qty = Math.Round(qty, 8);
+            //else
+            //    qty = Math.Floor(qty);
 
             //seçili symbol için izin verilen min qty girilmelidir.
             var depth = BitConverter.GetBytes(decimal.GetBits(Normalize(minQty))[3])[2];
