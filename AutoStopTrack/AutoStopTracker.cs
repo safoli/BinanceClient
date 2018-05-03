@@ -47,8 +47,7 @@ namespace AutoStopTrack
                     BalanceTrack();
                     System.Threading.Thread.Sleep(2 * 1000);
 
-                    var orders = Client.GetOpenOrders();
-                    orders.ToList().ForEach((order) => Track(order));
+                    OrderTrack();
                     System.Threading.Thread.Sleep(10 * 1000);
                 }
                 catch (Exception ex)
@@ -59,6 +58,8 @@ namespace AutoStopTrack
                 }
             }
         }
+
+        #region Balance Track
 
         void BalanceTrack()
         {
@@ -102,30 +103,6 @@ namespace AutoStopTrack
             }
         }
 
-        private decimal GetStopPercent(decimal profit)
-        {
-            decimal stopTrackPercent = 0.05m;
-
-            if (profit < 0.1m)
-                stopTrackPercent = 0.045m;
-            else if (profit < 0.125m)
-                stopTrackPercent = 0.04m;
-            else if (profit < 0.15m)
-                stopTrackPercent = 0.035m;
-            else if (profit < 0.2m)
-                stopTrackPercent = 0.03m;
-            else if (profit < 0.3m)
-                stopTrackPercent = 0.027m;
-            else if (profit < 0.5m)
-                stopTrackPercent = 0.025m;
-            else if (profit < 0.75m)
-                stopTrackPercent = 0.022m;
-            else
-                stopTrackPercent = 0.02m;
-
-            return stopTrackPercent;
-        }
-
         private List<BalanceWrapper> GetBalance()
         {
             var balances = Client.GetBalance();
@@ -148,6 +125,16 @@ namespace AutoStopTrack
             }
 
             return balanceWrapperList;
+        }
+
+        #endregion
+
+        #region Order Track
+
+        void OrderTrack()
+        {
+            var orders = Client.GetOpenOrders();
+            orders.ToList().ForEach((order) => Track(order));
         }
 
         void Track(Order order)
@@ -185,6 +172,33 @@ namespace AutoStopTrack
             }
         }
 
+        #endregion
+
+        private decimal GetStopPercent(decimal profit)
+        {
+            decimal stopTrackPercent = 0.05m;
+
+            if (profit < 0.1m)
+                stopTrackPercent = 0.045m;
+            else if (profit < 0.125m)
+                stopTrackPercent = 0.04m;
+            else if (profit < 0.15m)
+                stopTrackPercent = 0.035m;
+            else if (profit < 0.2m)
+                stopTrackPercent = 0.03m;
+            else if (profit < 0.3m)
+                stopTrackPercent = 0.027m;
+            else if (profit < 0.5m)
+                stopTrackPercent = 0.025m;
+            else if (profit < 0.75m)
+                stopTrackPercent = 0.022m;
+            else
+                stopTrackPercent = 0.02m;
+
+            return stopTrackPercent;
+        }
+
+        [Obsolete()]
         double GetCost(string symbol)
         {
             var trades = Client.GetTrades(symbol);
