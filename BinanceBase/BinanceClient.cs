@@ -71,6 +71,12 @@ namespace BinanceBase
             request.AddParameter("symbol", symbol);
 
             var response = client.Execute(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException($"GetPrice({symbol}) patladı, response.StatusCode :{response.StatusCode}");
+            }
+
             dynamic obj = JsonConvert.DeserializeObject(response.Content);
 
             return obj["price"];
@@ -264,7 +270,7 @@ namespace BinanceBase
             request.AddParameter("signature", queryStringHashed);
 
             var response = client.Execute(request);
-            var balanceInfo= JsonConvert.DeserializeObject<BalanceInfo>(response.Content);
+            var balanceInfo = JsonConvert.DeserializeObject<BalanceInfo>(response.Content);
             return balanceInfo.balances.ToList();
         }
 
