@@ -41,9 +41,9 @@ namespace StopTrack
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Common.Logger.Write(ex.Message);
                     try { SetupClient(); } catch (Exception) { } //try setup
-                    Console.WriteLine("Hata sonrası izlemeye tekrar başla");
+                    Common.Logger.Write("Hata sonrası izlemeye tekrar başla");
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace StopTrack
                 }
 
                 var lowlevelPrice = Common.FixPrice(price * (1 - stopTrackPercent), minPrice);
-                Console.WriteLine($"{order.symbol} {Math.Round(profit * 100, 2)}% | price :{price} | curr stop :{order.stopPrice} |rate :{stopTrackPercent * 100}% stop :{lowlevelPrice} | {DateTime.Now}");
+                Common.Logger.Write($"{order.symbol} {Math.Round(profit * 100, 2)}% | price :{price} | curr stop :{order.stopPrice} |rate :{stopTrackPercent * 100}% stop :{lowlevelPrice} | {DateTime.Now}");
 
                 //uygula
                 if (order.stopPrice < lowlevelPrice)
@@ -102,7 +102,7 @@ namespace StopTrack
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex.Message);
+                Common.Logger.Write(ex.Message);
             }
         }
 

@@ -55,12 +55,14 @@
   <ItemGroup>
     <Compile Include="BinanceClient.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="DefaultLogger.cs" />
     <Compile Include="DTO\24hr.cs" />
     <Compile Include="DTO\Balance.cs" />
     <Compile Include="DTO\ExchangeInfo.cs" />
     <Compile Include="DTO\Kline.cs" />
     <Compile Include="DTO\Order.cs" />
     <Compile Include="DTO\Trade.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

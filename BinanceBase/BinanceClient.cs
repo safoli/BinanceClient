@@ -118,13 +118,12 @@ namespace BinanceBase
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                //Console.WriteLine($"{side} Order Success! Symbol :{symbol}, Price :{price}, Qty :{quantity}, Amount :{ (double)price * quantity } order client id = {id}"); dont need it
-                Console.WriteLine($"{side} Order Success! Symbol :{symbol}, PRICE :{price}, Qty :{quantity}, Amount :{ (double)price * quantity }");
+                Common.Logger.Write($"{side} Order Success! Symbol :{symbol}, PRICE :{price}, Qty :{quantity}, Amount :{ (double)price * quantity }");
                 return id;
             }
             else
             {
-                Console.WriteLine($"{side} Order Failed! Symbol :{symbol}, Price :{price}, Qty :{quantity}, Amount :{ (double)price * quantity } " + response.Content);
+                Common.Logger.Write($"{side} Order Failed! Symbol :{symbol}, Price :{price}, Qty :{quantity}, Amount :{ (double)price * quantity } " + response.Content);
                 return string.Empty;
             }
         }
@@ -147,12 +146,12 @@ namespace BinanceBase
             {
                 dynamic obj = JsonConvert.DeserializeObject(response.Content);
                 var status = obj["status"];
-                Console.WriteLine($"Get Order Status Success! Symbol :{symbol}, Status : {status}, Order Client Id : {id}");
+                Common.Logger.Write($"Get Order Status Success! Symbol :{symbol}, Status : {status}, Order Client Id : {id}");
                 return status;
             }
             else
             {
-                Console.WriteLine($"Status Failed! Symbol :{symbol}, Order Client Id : {id} " + response.Content);
+                Common.Logger.Write($"Status Failed! Symbol :{symbol}, Order Client Id : {id} " + response.Content);
                 return string.Empty;
             }
         }
@@ -173,13 +172,12 @@ namespace BinanceBase
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                //Console.WriteLine($"Canceled! Symbol :{symbol}, order client id = {id}"); dont need it
-                Console.WriteLine($"Canceled! Symbol :{symbol}");
+                Common.Logger.Write($"Canceled! Symbol :{symbol}");
                 return true;
             }
             else
             {
-                Console.WriteLine($"Cancel Failed! Symbol :{symbol}, order client id = {id}" + response.Content);
+                Common.Logger.Write($"Cancel Failed! Symbol :{symbol}, order client id = {id}" + response.Content);
                 return false;
             }
         }

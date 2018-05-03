@@ -52,9 +52,9 @@ namespace AutoStopTrack
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Common.Logger.Write(ex.Message);
                     try { SetupClient(); } catch (Exception) { } //try setup
-                    Console.WriteLine("Hata sonrası izlemeye tekrar başla");
+                    Common.Logger.Write("Hata sonrası izlemeye tekrar başla");
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace AutoStopTrack
 
             if (balances.Count == 0)
             {
-                Console.WriteLine($"işlem yapacak bakiye yok. {DateTime.Now}");
+                Common.Logger.Write($"işlem yapacak bakiye yok. {DateTime.Now}");
             }
             else
             {
@@ -80,13 +80,13 @@ namespace AutoStopTrack
 
                     if (balance.CostPrice == 0)
                     {
-                        Console.WriteLine($"{balance.asset} | Balance :{balance.free * balance.CurrentPrice}BTC | DIKKAT : cost = 0, atlanıyor. | {DateTime.Now}");
+                        Common.Logger.Write($"{balance.asset} | Balance :{balance.free * balance.CurrentPrice}BTC | DIKKAT : cost = 0, atlanıyor. | {DateTime.Now}");
                         return;
                     }
                     else
                     {
                         profit = (balance.CurrentPrice - balance.CostPrice) / balance.CostPrice;
-                        Console.WriteLine($"{balance.asset} | {Math.Round(profit * 100, 2)}% | cost :{balance.CostPrice}BTC | price :{balance.CurrentPrice}BTC | qty :{qty} | {DateTime.Now}");
+                        Common.Logger.Write($"{balance.asset} | {Math.Round(profit * 100, 2)}% | cost :{balance.CostPrice}BTC | price :{balance.CurrentPrice}BTC | qty :{qty} | {DateTime.Now}");
                     }
 
                     if (profit < 0.07m) //en az %7 kar yoksa emir girme
@@ -96,7 +96,7 @@ namespace AutoStopTrack
                     var stopTrackPercent = GetStopPercent(profit);
                     var lowlevelPrice = Common.FixPrice(balance.CurrentPrice * (1 - stopTrackPercent), rule.MinPrice);
 
-                    Console.WriteLine($"{symbol} {Math.Round(profit * 100, 2)}% | price :{balance.CurrentPrice} |rate :{stopTrackPercent * 100}% | stop :{lowlevelPrice} | {DateTime.Now}");
+                    Common.Logger.Write($"{symbol} {Math.Round(profit * 100, 2)}% | price :{balance.CurrentPrice} |rate :{stopTrackPercent * 100}% | stop :{lowlevelPrice} | {DateTime.Now}");
 
                     Client.Sell(symbol, (double)qty, Common.FixPrice(lowlevelPrice - (10 * rule.MinPrice), rule.MinPrice), lowlevelPrice); //stop un 10 birim altına satış gir
                 });
@@ -156,7 +156,7 @@ namespace AutoStopTrack
                 var stopTrackPercent = GetStopPercent(profit);
 
                 var lowlevelPrice = Common.FixPrice(price * (1 - stopTrackPercent), rule.MinPrice);
-                Console.WriteLine($"{order.symbol} {Math.Round(profit * 100, 2)}% | price :{price} | curr stop :{order.stopPrice} | rate :{stopTrackPercent * 100}% | stop :{lowlevelPrice} | {DateTime.Now}");
+                Common.Logger.Write($"{order.symbol} {Math.Round(profit * 100, 2)}% | price :{price} | curr stop :{order.stopPrice} | rate :{stopTrackPercent * 100}% | stop :{lowlevelPrice} | {DateTime.Now}");
 
                 //uygula
                 if (order.stopPrice < lowlevelPrice)
@@ -168,7 +168,7 @@ namespace AutoStopTrack
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex.Message);
+                Common.Logger.Write(ex.Message);
             }
         }
 

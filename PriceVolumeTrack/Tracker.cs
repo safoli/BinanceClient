@@ -37,9 +37,9 @@ namespace PriceVolumeTrack
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Common.Logger.Write(ex.Message);
                     try { SetupClient(); } catch (Exception) { } //try setup
-                    Console.WriteLine("Hata sonrası izlemeye tekrar başla");
+                    Common.Logger.Write("Hata sonrası izlemeye tekrar başla");
                 }
             }
         }

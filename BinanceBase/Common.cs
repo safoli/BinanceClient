@@ -45,6 +45,24 @@ namespace BinanceBase
             }
         }
 
+        private static ILogger _Logger;
+        public static ILogger Logger
+        {
+            get
+            {
+                if (_Logger is null)
+                    _Logger = new DefaultLogger();
+
+                return _Logger;
+            }
+        }
+
+        public static void SetLogger(ILogger logger)
+        {
+            _Logger = logger;
+        }
+
+
         public static decimal FixQty(decimal qty, decimal minQty)
         {
             //if ((Int32)qty < 1) //1 den küçük ise bu fiyatı büyük bir altcoin dir.
