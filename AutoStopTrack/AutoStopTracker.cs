@@ -73,29 +73,29 @@ namespace AutoStopTrack
                 balances.ForEach((balance) =>
                 {
                     decimal profit;
+                    var symbol = balance.asset + "BTC";
+                    var rule = GetRule(symbol);
+                    var qty = Common.FixQty(balance.free, rule.MinQty);
 
                     if (balance.CostPrice == 0)
                     {
-                        Console.WriteLine($"[{balance.asset}] Balance :{balance.free * balance.CurrentPrice}BTC, DIKKAT : cost = 0, atlanıyor. {DateTime.Now}");
+                        Console.WriteLine($"{balance.asset} | Balance :{balance.free * balance.CurrentPrice}BTC | DIKKAT : cost = 0, atlanıyor. | {DateTime.Now}");
                         return;
                     }
                     else
                     {
                         profit = (balance.CurrentPrice - balance.CostPrice) / balance.CostPrice;
-                        Console.WriteLine($"{Math.Round(profit * 100, 2)}% [{balance.asset}] f :{balance.CurrentPrice} q :{balance.free } {DateTime.Now}");
+                        Console.WriteLine($"{balance.asset} | {Math.Round(profit * 100, 2)}% | cost :{balance.CostPrice}BTC | price :{balance.CurrentPrice}BTC | qty :{qty} | {DateTime.Now}");
                     }
 
                     if (profit < 0.07m) //en az %7 kar yoksa emir girme
                         return;
 
                     //emri gir
-                    var symbol = balance.asset + "BTC";
-                    var rule = GetRule(symbol);
                     var stopTrackPercent = GetStopPercent(profit);
                     var lowlevelPrice = Common.FixPrice(balance.CurrentPrice * (1 - stopTrackPercent), rule.MinPrice);
-                    var qty = Common.FixQty(balance.free, rule.MinQty);
 
-                    Console.WriteLine($"{symbol} {Math.Round(profit * 100, 2)}% | price :{balance.CurrentPrice} |rate :{stopTrackPercent * 100}% stop :{lowlevelPrice} | {DateTime.Now}");
+                    Console.WriteLine($"{symbol} {Math.Round(profit * 100, 2)}% | price :{balance.CurrentPrice} |rate :{stopTrackPercent * 100}% | stop :{lowlevelPrice} | {DateTime.Now}");
 
                     Client.Sell(symbol, (double)qty, Common.FixPrice(lowlevelPrice - (10 * rule.MinPrice), rule.MinPrice), lowlevelPrice); //stop un 10 birim altına satış gir
                 });
@@ -169,7 +169,7 @@ namespace AutoStopTrack
                 var stopTrackPercent = GetStopPercent(profit);
 
                 var lowlevelPrice = Common.FixPrice(price * (1 - stopTrackPercent), rule.MinPrice);
-                Console.WriteLine($"{order.symbol} {Math.Round(profit * 100, 2)}% | price :{price} | curr stop :{order.stopPrice} |rate :{stopTrackPercent * 100}% stop :{lowlevelPrice} | {DateTime.Now}");
+                Console.WriteLine($"{order.symbol} {Math.Round(profit * 100, 2)}% | price :{price} | curr stop :{order.stopPrice} | rate :{stopTrackPercent * 100}% | stop :{lowlevelPrice} | {DateTime.Now}");
 
                 //uygula
                 if (order.stopPrice < lowlevelPrice)
