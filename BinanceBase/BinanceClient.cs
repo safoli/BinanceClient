@@ -3,6 +3,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace BinanceBase
             request.RequestFormat = DataFormat.Json;
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response);
         }
 
         public long GetServerTime()
@@ -30,6 +32,8 @@ namespace BinanceBase
             request.RequestFormat = DataFormat.Json;
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response);
+
             dynamic obj = JsonConvert.DeserializeObject(response.Content);
 
             return obj["serverTime"];
@@ -42,6 +46,8 @@ namespace BinanceBase
             request.RequestFormat = DataFormat.Json;
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response);
+
             return JsonConvert.DeserializeObject<DTO.ExchangeInfo>(response.Content);
         }
 
@@ -59,6 +65,8 @@ namespace BinanceBase
             request.AddParameter("signature", queryStringHashed);
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response, symbol);
+
             return JsonConvert.DeserializeObject<DTO.Order[]>(response.Content);
         }
 
@@ -71,11 +79,7 @@ namespace BinanceBase
             request.AddParameter("symbol", symbol);
 
             var response = client.Execute(request);
-
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new ArgumentException($"GetPrice({symbol}) patladı, response.StatusCode :{response.StatusCode}");
-            }
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response, symbol);
 
             dynamic obj = JsonConvert.DeserializeObject(response.Content);
 
@@ -192,6 +196,8 @@ namespace BinanceBase
             request.AddParameter("signature", queryStringHashed);
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response, symbol);
+
             return JsonConvert.DeserializeObject<DTO.Order[]>(response.Content);
         }
 
@@ -207,6 +213,8 @@ namespace BinanceBase
             request.AddParameter("signature", queryStringHashed);
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response, symbol);
+
             return JsonConvert.DeserializeObject<DTO.Trade[]>(response.Content);
         }
 
@@ -220,6 +228,8 @@ namespace BinanceBase
             request.AddParameter("interval", klineIntervalTypeCode);
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response, symbol);
+
             dynamic obj = JsonConvert.DeserializeObject(response.Content);
 
             var klines = new List<DTO.Kline>();
@@ -255,6 +265,8 @@ namespace BinanceBase
             request.AddParameter("symbol", symbol);
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response, symbol);
+
             return JsonConvert.DeserializeObject<DTO._24hr>(response.Content);
         }
 
@@ -270,6 +282,8 @@ namespace BinanceBase
             request.AddParameter("signature", queryStringHashed);
 
             var response = client.Execute(request);
+            ResponseStatusCheck(MethodInfo.GetCurrentMethod().Name, response);
+
             var balanceInfo = JsonConvert.DeserializeObject<BalanceInfo>(response.Content);
             return balanceInfo.balances.ToList();
         }
@@ -277,6 +291,15 @@ namespace BinanceBase
         internal class BalanceInfo
         {
             public DTO.Balance[] balances { get; set; }
+        }
+
+        private void ResponseStatusCheck(string methodName, IRestResponse response, params string[] parameters)
+        {
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                var paramSentence = string.Join(",", parameters);
+                throw new ArgumentException($"{methodName}({paramSentence}) patladı, response.StatusCode :{response.StatusCode}");
+            }
         }
 
         #region Helpers
